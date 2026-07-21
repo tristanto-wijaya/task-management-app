@@ -111,7 +111,7 @@ python -m uvicorn app.main:app --reload
 
 Runs at `http://localhost:8000` — API docs at `http://localhost:8000/docs`.
 
-> Already have PostgreSQL running locally? Skip `docker compose up -d` and point `DATABASE_URL` in `backend/.env` at your own database instead.
+> Already have PostgreSQL running locally? Skip `docker compose up -d`,create a dedicated empty database and point `DATABASE_URL` in `backend/.env` to it before running the migration and seed commands.
 
 ### Frontend
 
