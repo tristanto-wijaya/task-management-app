@@ -71,9 +71,9 @@ task-management-app/
 ## Prerequisites
 
 - Git
-- Python 3.12 (on Debian/Ubuntu, also install the `python3.12-venv` package — see Linux steps below)
-- Node.js 20.9 or later — on Debian/Ubuntu, the default `apt` package is older than this; install via [NodeSource](https://github.com/nodesource/distributions) or [nvm](https://github.com/nvm-sh/nvm) instead
-- Docker Desktop (Linux: Docker Engine + the Compose plugin) — must be **running** before the steps below
+- Python 3.12
+- Node.js 20.9 or later
+- Docker Desktop, running before the steps below
 
 ## Running the Project
 
@@ -110,24 +110,6 @@ python -m app.seed
 python -m uvicorn app.main:app --reload
 ```
 
-> If activation fails with "running scripts is disabled on this system", the `Set-ExecutionPolicy` line above fixes it for the current terminal only — it doesn't change any system-wide setting.
-
-**Linux**
-
-```bash
-cd backend
-cp .env.example .env
-docker compose up -d
-
-sudo apt install -y python3.12 python3.12-venv   # skip if already installed
-python3.12 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python -m alembic upgrade head
-python -m app.seed
-python -m uvicorn app.main:app --reload
-```
-
 Runs at `http://localhost:8000` — API docs at `http://localhost:8000/docs`.
 
 > Already have PostgreSQL running locally? Skip `docker compose up -d`, create a dedicated empty database, and point `DATABASE_URL` in `backend/.env` at it before running the migration and seed commands, e.g.:
@@ -158,15 +140,6 @@ npm run dev
 ```powershell
 Set-Location frontend
 Copy-Item .env.example .env.local
-npm install
-npm run dev
-```
-
-**Linux**
-
-```bash
-cd frontend
-cp .env.example .env.local
 npm install
 npm run dev
 ```
@@ -231,11 +204,8 @@ docker compose down -v           # stop Postgres, delete data
 
 ## Troubleshooting
 
-- **`docker compose up -d` hangs or fails immediately** — Docker Desktop isn't running yet; open it and try again.
-- **Migrations or seed fail with an authentication or "database does not exist" error even though the Postgres container is "Up"** — another Postgres (local install or another project) is already using the port the container tries to publish. Check what's listening (`lsof -i :5433` on macOS/Linux, `netstat -ano | findstr 5433` on Windows), then either stop it or change the port in both `backend/docker-compose.yml` and `DATABASE_URL`.
-- **Frontend prints `Port 3000 is in use ... using port 3001 instead`** — harmless, but if you changed `CORS_ORIGINS` from its default, make sure it includes whatever port the frontend actually landed on (comma-separated), then restart the backend.
-- **Windows: `Activate.ps1 cannot be loaded because running scripts is disabled on this system`** — run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` in the same terminal, then activate again.
-- **Linux: `python3.12 -m venv` fails with "ensurepip is not available"** — install `python3.12-venv` (`sudo apt install python3.12-venv`), then retry.
+- **Migrations or seed fail with an authentication or "database does not exist" error even though the Postgres container is "Up"** — another Postgres is already using the port the container publishes. Stop it, or change the port in both `backend/docker-compose.yml` and `DATABASE_URL`.
+- **Frontend prints `Port 3000 is in use ... using port 3001 instead`** — harmless, but if you changed `CORS_ORIGINS` from its default, make sure it includes whichever port the frontend landed on (comma-separated), then restart the backend.
 
 ## Documentation
 
