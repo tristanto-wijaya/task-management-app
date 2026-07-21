@@ -1,0 +1,32 @@
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# Frontend
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Backend
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Database
+*.db
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
